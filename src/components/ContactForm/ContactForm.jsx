@@ -1,31 +1,33 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import css from './ContactForm.module.css'; 
 
-export class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
+export const ContactForm = ({ handleSubmit }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleChangeName = e => {
+    const { value } = e.target;
+    setName(value);
+  }; 
+
+  const handleChangeNumber = e => {
+    const { value } = e.target;
+    setNumber(value);
   };
 
-  handleChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
+  const reset = () => {
+  setName('');
+  setNumber('');
   };
 
-  handleSubmit = e => {
+  const handleFormSubmit = e => { 
     e.preventDefault();
-    this.props.handleSubmit({ ...this.state });
-    this.setState({
-      name: '',
-      number: '',
-    })
-  };
-
-  render() {
-    const { name, number } = this.state;
+    handleSubmit({ name: name, number: number });
+    reset();
+  }; 
 
     return (
-      <form className={css.form} onSubmit={this.handleSubmit}>
+      <form className={css.form} onSubmit={handleFormSubmit}>  
         <label className={css.formLabel}>Name </label>
         <input
           className={css.formInput}
@@ -36,7 +38,7 @@ export class ContactForm extends Component {
           required
           placeholder="Enter name"
           value={name}
-          onChange={this.handleChange}
+          onChange={handleChangeName}
         />
         <label className={css.formLabel}>Number </label>
         <input
@@ -47,13 +49,12 @@ export class ContactForm extends Component {
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
           placeholder="Enter phone number"
-          value={number}
-          onChange={this.handleChange}
+          value={number} 
+          onChange={handleChangeNumber}
         />
         <button className={css.formBtn} type="submit">
           Add contact
         </button>
       </form>
-    );
+    );  
   }
-}
